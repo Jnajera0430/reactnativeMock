@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Constants from "expo-constants";
 import { StyleSheet } from "react-native";
 import RepositoryList from "./RepositoryList";
@@ -7,13 +7,14 @@ import AppBar from "./AppBar";
 import { NativeRouter, Route, Routes } from "react-router-native";
 import SignIn from "./SignIn";
 import BodyMassIndexCalculator from "./BodyMassIndexForm";
-import Font from "expo-font";
+import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 SplashScreen.preventAutoHideAsync();
 const loadFonts = async () => {
   await Font.loadAsync({
-    "Sans-serif": require("../../assets/fonts/OpenSans-VariableFont_wdth,wght.ttf"),
+    Sansserif: require("../../assets/fonts/OpenSans.ttf"),
     Roboto: require("../../assets/fonts/Roboto.ttf"),
+    Arial: require("../../assets/fonts/Arial.ttf"),
   });
 };
 
@@ -45,23 +46,32 @@ const Main = () => {
   <FlexboxExample /> */
   }
 
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
-    async function fetchFonts() {
+    (async () => {
       await loadFonts();
-      setFontsLoaded(true);
-    }
-
-    fetchFonts();
+      setAppIsReady(true);
+    })();
   }, []);
 
-  if (!fontsLoaded) {
-    return <View>cargando</View>;
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
   }
   return (
     <NativeRouter>
-      <View style={styles.container}>
+      <View style={styles.container} onLayout={onLayoutRootView}>
         <AppBar />
         <View style={styles.containerRoutes}>
           <Routes>

@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
   inputStyle: {
     width: "100%",
     height: "100%",
-    ...theme.fonts,
+    fontFamily: theme.fonts.main,
   },
 });
 
