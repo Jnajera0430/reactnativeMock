@@ -6,6 +6,8 @@ import { Formik } from "formik";
 import theme from "../theme";
 import { TouchableOpacity } from "react-native";
 import * as yup from "yup";
+import useSignIn from "../hooks/useSignIn";
+import { useNavigate } from "react-router-native";
 
 const validationSchema = yup.object().shape({
   username: yup.string().required("Username is required"),
@@ -57,8 +59,19 @@ const SignInForm = ({ onSubmit }) => {
 };
 
 const SignIn = () => {
-  const onSubmit = (values) => {
-    console.log({ values });
+  const [signIn] = useSignIn();
+  const navigate = useNavigate();
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+
+    try {
+      const data = await signIn({ username, password });
+      if (data) {
+        navigate("//");
+      }
+    } catch (e) {
+      console.warn(e);
+    }
   };
   return (
     <Formik

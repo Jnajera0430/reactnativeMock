@@ -9,6 +9,11 @@ import SignIn from "./SignIn";
 import BodyMassIndexCalculator from "./BodyMassIndexForm";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { ApolloProvider } from "@apollo/react-hooks";
+import createApolloClient from "../utils/apolloClient";
+import AuthStorage from "../utils/authStorage";
+import AuthStorageContext from "../context/AuthStorageContext";
+
 SplashScreen.preventAutoHideAsync();
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -17,6 +22,9 @@ const loadFonts = async () => {
     Arial: require("../../assets/fonts/Arial.ttf"),
   });
 };
+
+const authStorage = new AuthStorage();
+const apolloClient = createApolloClient(authStorage);
 
 const styles = StyleSheet.create({
   container: {
@@ -36,16 +44,6 @@ const styles = StyleSheet.create({
 });
 
 const Main = () => {
-  {
-    /* <Text>Simple text</Text>
-  <Text style={{ paddingBottom: 10 }}>Text with custom style</Text>
-  <Text fontWeight='bold' fontSize='subheading'>
-    Bold subheading
-  </Text>
-  <Text color='textSecondary'>Text with secondary color</Text>
-  <FlexboxExample /> */
-  }
-
   const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
@@ -71,16 +69,20 @@ const Main = () => {
   }
   return (
     <NativeRouter>
-      <View style={styles.container} onLayout={onLayoutRootView}>
-        <AppBar />
-        <View style={styles.containerRoutes}>
-          <Routes>
-            <Route path='/' Component={RepositoryList} />
-            <Route path='/signin' Component={SignIn} />
-            <Route path='/form' Component={BodyMassIndexCalculator} />
-          </Routes>
-        </View>
-      </View>
+      <ApolloProvider client={apolloClient}>
+        <AuthStorageContext.Provider value={authStorage}>
+          <View style={styles.container} onLayout={onLayoutRootView}>
+            <AppBar />
+            <View style={styles.containerRoutes}>
+              <Routes>
+                <Route path='/' Component={RepositoryList} />
+                <Route path='/signin' Component={SignIn} />
+                <Route path='/form' Component={BodyMassIndexCalculator} />
+              </Routes>
+            </View>
+          </View>
+        </AuthStorageContext.Provider>
+      </ApolloProvider>
     </NativeRouter>
   );
 };
