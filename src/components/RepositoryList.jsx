@@ -1,7 +1,10 @@
 import { FlatList, StyleSheet } from "react-native";
 import RepositoryItem from "./RepositoryItem";
 import useRepositories from "../hooks/useRepositories";
-
+import useRepository from "../hooks/useRepository";
+import { useEffect } from "react";
+import { useParams } from "react-router-native";
+import SingleRepository from "./SingleRepository ";
 const style = StyleSheet.create({
   container: {
     display: "flex",
@@ -10,16 +13,24 @@ const style = StyleSheet.create({
   },
 });
 
-const RepositoryList = () => {
-  const { repositories, loading } = useRepositories();
-  if (loading) {
-    return null;
-  }
-  // Get the nodes from the edges array
+//Ahora este componente no es muy puro.
+export const RepositoryListContainer = ({ repositories }) => {
+  const { getRepository, repository } = useRepository();
+  const { id } = useParams();
+
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
     : [];
-  return (
+
+  useEffect(() => {
+    if (id) {
+      getRepository(id);
+    }
+  }, [id]);
+
+  return id ? (
+    <SingleRepository repository={repository} isViewItem={id !== undefined} />
+  ) : (
     <FlatList
       style={style.container}
       contentContainerStyle={{
@@ -28,10 +39,19 @@ const RepositoryList = () => {
         justifyContent: "space-between",
       }}
       data={repositoryNodes}
-      renderItem={({ item }) => <RepositoryItem repository={item} />}
+      renderItem={({ item }) => (
+        <RepositoryItem repository={item} isViewItem={id !== undefined} />
+      )}
       keyExtractor={(item) => item.id}
     />
   );
+};
+
+//una tecnica para volver un componente pure
+const RepositoryList = () => {
+  const { repositories } = useRepositories();
+
+  return <RepositoryListContainer repositories={repositories} />;
 };
 
 export default RepositoryList;

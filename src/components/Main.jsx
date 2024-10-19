@@ -76,7 +76,9 @@ const Main = () => {
             <View style={styles.containerRoutes}>
               <Routes>
                 <Route path='/' Component={RepositoryList} />
+                <Route path='/:id' Component={RepositoryList} />
                 <Route path='/signin' Component={SignIn} />
+                <Route path='/createreview' Component={SignIn} />
                 <Route path='/form' Component={BodyMassIndexCalculator} />
               </Routes>
             </View>

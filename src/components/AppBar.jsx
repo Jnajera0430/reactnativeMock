@@ -48,29 +48,44 @@ const AppBar = () => {
           </Text>
         </Link>
         {!user ? (
-          <Link to='/signin'>
-            <Text
-              color={"primary"}
-              fontWeight={"bold"}
-              style={{
-                color: "white",
-              }}
-            >
-              Sign in
-            </Text>
-          </Link>
+          <>
+            <Link to='/signin'>
+              <Text
+                color={"primary"}
+                fontWeight={"bold"}
+                style={{
+                  color: "white",
+                }}
+              >
+                Sign in
+              </Text>
+            </Link>
+          </>
         ) : (
-          <TouchableOpacity onPress={handleLogout}>
-            <Text
-              color={"primary"}
-              fontWeight={"bold"}
-              style={{
-                color: "white",
-              }}
-            >
-              Log out
-            </Text>
-          </TouchableOpacity>
+          <>
+            <Link to='/createreview'>
+              <Text
+                color={"primary"}
+                fontWeight={"bold"}
+                style={{
+                  color: "white",
+                }}
+              >
+                Create a review
+              </Text>
+            </Link>
+            <TouchableOpacity onPress={handleLogout}>
+              <Text
+                color={"primary"}
+                fontWeight={"bold"}
+                style={{
+                  color: "white",
+                }}
+              >
+                Log out
+              </Text>
+            </TouchableOpacity>
+          </>
         )}
       </ScrollView>
     </View>
