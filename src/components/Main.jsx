@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Constants from "expo-constants";
 import { StyleSheet } from "react-native";
-import RepositoryList from "./RepositoryList";
+import RepositoryList from "./repositories/RepositoryList";
 import { View } from "react-native";
 import AppBar from "./AppBar";
 import { NativeRouter, Route, Routes } from "react-router-native";
-import SignIn from "./SignIn";
+import SignIn from "./auth/SignIn";
 import BodyMassIndexCalculator from "./BodyMassIndexForm";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -13,6 +13,9 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import createApolloClient from "../utils/apolloClient";
 import AuthStorage from "../utils/authStorage";
 import AuthStorageContext from "../context/AuthStorageContext";
+import CreateReview from "./reviews/CreateReview";
+import Signup from "./auth/Signup";
+import Reviews from "./reviews/Reviews";
 
 SplashScreen.preventAutoHideAsync();
 const loadFonts = async () => {
@@ -78,8 +81,10 @@ const Main = () => {
                 <Route path='/' Component={RepositoryList} />
                 <Route path='/:id' Component={RepositoryList} />
                 <Route path='/signin' Component={SignIn} />
-                <Route path='/createreview' Component={SignIn} />
+                <Route path='/signup' Component={Signup} />
+                <Route path='/createreview' Component={CreateReview} />
                 <Route path='/form' Component={BodyMassIndexCalculator} />
+                <Route path='/reviews' Component={Reviews} />
               </Routes>
             </View>
           </View>

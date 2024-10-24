@@ -1,8 +1,20 @@
 import { gql } from "apollo-boost";
 
 export const GET_REPOSITORIES = gql`
-  query {
-    repositories {
+  query repositories(
+    $orderDirection: OrderDirection
+    $orderBy: AllRepositoriesOrderBy
+    $searchKeyword: String
+    $first: Int
+    $after: String
+  ) {
+    repositories(
+      orderDirection: $orderDirection
+      orderBy: $orderBy
+      searchKeyword: $searchKeyword
+      first: $first
+      after: $after
+    ) {
       edges {
         node {
           fullName
@@ -32,7 +44,7 @@ export const GET_REPOSITORIES = gql`
 `;
 
 export const GET_REPOSITORY = gql`
-  query repositoryByID($id: ID!) {
+  query repositoryByID($id: ID!, $first: Int, $after: String) {
     repository(id: $id) {
       id
       fullName
@@ -48,7 +60,43 @@ export const GET_REPOSITORY = gql`
       name
       watchersCount
       stargazersCount
-      reviews {
+      reviews(first: $first, after: $after) {
+        edges {
+          node {
+            id
+            text
+            rating
+            createdAt
+            repository {
+              fullName
+            }
+            user {
+              id
+              username
+            }
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+          startCursor
+          hasPreviousPage
+        }
+      }
+    }
+  }
+`;
+
+export const GET_USER = gql`
+  query getCurrentUser(
+    $includeReviews: Boolean = false
+    $first: Int
+    $after: String
+  ) {
+    me {
+      id
+      username
+      reviews(first: $first, after: $after) @include(if: $includeReviews) {
         edges {
           node {
             id
@@ -59,18 +107,19 @@ export const GET_REPOSITORY = gql`
               id
               username
             }
+            repository {
+              id
+              fullName
+            }
           }
         }
+        pageInfo {
+          endCursor
+          hasNextPage
+          hasPreviousPage
+          startCursor
+        }
       }
-    }
-  }
-`;
-
-export const GET_USER = gql`
-  {
-    me {
-      id
-      username
     }
   }
 `;

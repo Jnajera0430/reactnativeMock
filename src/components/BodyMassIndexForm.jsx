@@ -1,8 +1,8 @@
 import React from "react";
 import { TouchableWithoutFeedback, View } from "react-native";
 import { Formik } from "formik";
-import FormikTextInput from "./FormikTextInput";
-import Text from "./Text";
+import FormikTextInput from "./utils/FormikTextInput";
+import Text from "./utils/Text";
 import * as yup from "yup";
 
 const validationSchema = yup.object().shape({

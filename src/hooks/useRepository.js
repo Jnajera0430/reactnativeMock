@@ -1,29 +1,45 @@
-import { useLazyQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { GET_REPOSITORY } from "../graphql/queries";
-import { useEffect, useState } from "react";
 
-const useRepository = () => {
-  const [repository, setRepository] = useState(null);
-  const [fetch, result] = useLazyQuery(GET_REPOSITORY, {
-    // pollInterval: 2000,
-    fetchPolicy: "cache-and-network",
-  });
+const useRepository = (variables) => {
+  const { data, loading, fetchMore, refetch, ...result } = useQuery(
+    GET_REPOSITORY,
+    {
+      // pollInterval: 2000,
+      fetchPolicy: "cache-and-network",
+      variables,
+    }
+  );
 
   const getRepository = async (id) => {
     if (id) {
-      await fetch({ variables: { id: id } });
+      await refetch({ id });
     }
   };
 
-  useEffect(() => {
-    if (result.data) {
-      setRepository(result.data.repository);
+  const handleFetchMore = (id) => {
+    const canFetchMore =
+      !loading && data && data.repository.reviews.pageInfo.hasNextPage;
+
+    if (!canFetchMore) {
+      return;
     }
-  }, [result]);
+
+    fetchMore({
+      query: GET_REPOSITORY,
+      variables: {
+        ...variables,
+        after: data.repository.reviews.pageInfo.endCursor,
+        id,
+      },
+    });
+  };
 
   return {
-    repository: repository ? repository : null,
+    repository: data && !loading ? data.repository : null,
     getRepository,
+    fetchMore: handleFetchMore,
+    ...result,
   };
 };
 

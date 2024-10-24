@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     gap: 5,
     display: "flex",
     flexDirection: "column",
+    borderRadius: 3,
   },
   inputStyle: {},
 });
@@ -43,9 +44,7 @@ const FormikTextInput = ({ name, ...props }) => {
           {...props}
         />
       </View>
-      <Text fontWeight='bold' style={styles.errorText}>
-        {showError && meta.error}
-      </Text>
+      <Text style={styles.errorText}>{showError && meta.error}</Text>
     </>
   );
 };

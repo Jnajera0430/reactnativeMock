@@ -1,11 +1,10 @@
 import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import Text from "./Text";
-import { Link } from "react-router-native";
+import Text from "./utils/Text";
+import { Link, useNavigate } from "react-router-native";
 import useUserLogged from "../hooks/useUserLogged";
 import { TouchableOpacity } from "react-native";
 import useAuthStorage from "../hooks/useAuthStorage";
-import { useApolloClient } from "@apollo/client";
 
 const styles = StyleSheet.create({
   container: {
@@ -21,13 +20,13 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
-  const { user } = useUserLogged();
+  const { user } = useUserLogged({ includeReviews: false });
   const authStorage = useAuthStorage();
-  const apolloClient = useApolloClient();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     authStorage.removeAccessToken();
-    apolloClient.resetStore();
+    navigate("/signin");
   };
   return (
     <View style={styles.container}>
@@ -60,6 +59,18 @@ const AppBar = () => {
                 Sign in
               </Text>
             </Link>
+
+            <Link to='/signup'>
+              <Text
+                color={"primary"}
+                fontWeight={"bold"}
+                style={{
+                  color: "white",
+                }}
+              >
+                Sign up
+              </Text>
+            </Link>
           </>
         ) : (
           <>
@@ -72,6 +83,17 @@ const AppBar = () => {
                 }}
               >
                 Create a review
+              </Text>
+            </Link>
+            <Link to='/reviews'>
+              <Text
+                color={"primary"}
+                fontWeight={"bold"}
+                style={{
+                  color: "white",
+                }}
+              >
+                My reviews
               </Text>
             </Link>
             <TouchableOpacity onPress={handleLogout}>

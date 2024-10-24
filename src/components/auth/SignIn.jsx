@@ -1,12 +1,12 @@
 import React from "react";
-import Text from "./Text";
+import Text from "../utils/Text";
 import { StyleSheet, View } from "react-native";
-import FormikTextInput from "./FormikTextInput";
+import FormikTextInput from "../utils/FormikTextInput";
 import { Formik } from "formik";
-import theme from "../theme";
+import theme from "../../theme";
 import { TouchableOpacity } from "react-native";
 import * as yup from "yup";
-import useSignIn from "../hooks/useSignIn";
+import useSignIn from "../../hooks/useSignIn";
 import { useNavigate } from "react-router-native";
 
 const validationSchema = yup.object().shape({

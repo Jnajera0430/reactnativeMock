@@ -1,9 +1,8 @@
 import { TextInput as NativeTextInput, StyleSheet } from "react-native";
-import theme from "../theme";
+import theme from "../../theme";
 
 const styles = StyleSheet.create({
   inputStyle: {
-    width: "100%",
     height: "100%",
     fontFamily: theme.fonts.main,
   },
